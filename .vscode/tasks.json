@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "env": {
+            "PATH": "C:\\msys64\\ucrt64\\bin;${env:PATH}"
+        }
+    },
+    "tasks": [
+        {
+            "label": "Собрать (CMake)",
+            "type": "shell",
+            "command": "cmake -S . -B build && cmake --build build",
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": ["$gcc"],
+            "presentation": { "reuse": "shared", "clear": true }
+        },
+        {
+            "label": "g++: собрать текущий файл",
+            "type": "shell",
+            "command": "C:\\msys64\\ucrt64\\bin\\g++.exe",
+            "args": [
+                "-std=c++20",
+                "-Wall",
+                "-Wextra",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "presentation": { "reuse": "shared", "clear": true }
+        },
+        {
+            "label": "Запустить с input.txt -> output.txt",
+            "type": "shell",
+            "command": "${command:cmake.launchTargetPath} < \"${workspaceFolder}\\io\\input.txt\" > \"${workspaceFolder}\\io\\output.txt\"",
+            "options": {
+                "shell": { "executable": "cmd.exe", "args": ["/d", "/c"] }
+            },
+            "dependsOn": "Собрать (CMake)",
+            "problemMatcher": [],
+            "presentation": { "reuse": "shared", "clear": true }
+        }
+    ]
+}
