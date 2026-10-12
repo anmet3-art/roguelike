@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-
+//kaggle = money
 #include "entity.h"
 
 class Game {
