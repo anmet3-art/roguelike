@@ -1,6 +1,8 @@
 #include "entity.h"
-#include"game.h"
-#include<cstdlib>
+
+#include <cstdlib>
+
+#include "game.h"
 
 void Enemy::update(Game& game) {
     int playerX = game.getPlayer().getX();

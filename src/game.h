@@ -1,11 +1,12 @@
 #pragma once
 #include <conio.h>
+
 #include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
-//kaggle = money
+// kaggle = money
 #include "entity.h"
 
 class Game {
