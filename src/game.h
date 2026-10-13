@@ -42,7 +42,11 @@ class Game {
         }
         return map[y][x] == '.' && entityAt(x, y) == nullptr;
     }
+
+    void healPlayer(int amount){ player->giveHp(amount);}
     void damagePlayer(int amount) { player->takeDamage(amount); }
+
+
     Entity* entityAt(int x, int y) const {  // Что это за существо
         for (const auto& ent : entities) {
             if (x == ent->getX() && y == ent->getY()) {

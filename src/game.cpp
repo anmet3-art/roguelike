@@ -1,5 +1,5 @@
 #include "game.h"
-
+#include "item.h"
 #include <conio.h>
 
 #include <cstdlib>
@@ -43,7 +43,6 @@ bool Game::playerTurn() {
     } else if (input == 'a') {
         nx = player->getX() - 1;
         ny = player->getY();
-
     } else if (input == 'd') {
         nx = player->getX() + 1;
         ny = player->getY();

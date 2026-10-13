@@ -1,4 +1,5 @@
 #pragma once
+#include<algorithm>
 class Game;
 class Entity {
    private:
@@ -6,6 +7,7 @@ class Entity {
     int y;
     char symbol;
     int hp;
+    int maxHp;
     int damage;
 
    public:
@@ -14,6 +16,7 @@ class Entity {
         this->x = x;
         this->y = y;
         this->hp = hp;
+        this->maxHp=hp;
         this->damage = damage;
         this->symbol = symbol;
     }
@@ -32,6 +35,10 @@ class Entity {
     int getDamage() const { return damage; }
 
     void takeDamage(int amount) { hp = hp - amount; }
+    void giveHp(int amount){
+        hp=hp+amount;
+        hp=std::min(hp, maxHp);
+    }
     bool isDead() const { return hp <= 0; }
 
     char getSymbol() const { return symbol; }
