@@ -49,7 +49,7 @@ bool Game::playerTurn() {
     }
     Entity* playerMoveTarget = entityAt(nx, ny);
     if (playerMoveTarget != nullptr && playerMoveTarget != player) {
-        playerMoveTarget->takeDamage(player->getDamage());
+        playerMoveTarget->interact(*this);
         turn = true;
 
     } else if (isWalkable(nx, ny)) {

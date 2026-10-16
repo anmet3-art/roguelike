@@ -37,3 +37,7 @@ void Enemy::update(Game& game) {
         Newcoord(newX, newY);
     }
 }
+void Enemy::interact(Game& game){
+    takeDamage(game.getPlayer().getDamage());
+    
+}

@@ -27,6 +27,8 @@ class Entity {
     void moveLeft() { x--; }
     void moveRight() { x++; }
 
+
+
     // Getters
 
     int getX() const { return x; }
@@ -39,7 +41,7 @@ class Entity {
         hp=hp+amount;
         hp=std::min(hp, maxHp);
     }
-    bool isDead() const { return hp <= 0; }
+    virtual bool isDead() const { return hp <= 0; }
 
     char getSymbol() const { return symbol; }
     void Newcoord(int newX, int newY) {
@@ -47,6 +49,7 @@ class Entity {
         y = newY;
     }
     virtual void update(Game&) {}
+    virtual void interact(Game&){}
     virtual ~Entity() = default;
 };
 
@@ -64,5 +67,6 @@ class Enemy : public Entity {
     Enemy(int x, int y, int hp, int damage, int visionRange) : Entity(x, y, 'M', hp, damage) {
         this->visionRange = visionRange;
     }
+    void interact(Game& game) override;
     void update(Game& game) override;
 };

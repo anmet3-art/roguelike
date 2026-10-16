@@ -25,13 +25,13 @@ class Game {
                "#..................#", "#..................#", "#..................#",
                "#..................#", "#..................#", "#..................#",
                "#..................#", "####################"};
-        auto player_owner = std::make_unique<Player>(1, 1, 20, 5);
+        auto player_owner = std::make_unique<Player>(1, 1, 20, 2);
         player = player_owner.get();
         entities.push_back(std::move(player_owner));
-        entities.push_back(std::make_unique<Enemy>(10, 10, 5, 2, 4));  // x y hp dmg visionRange
-        entities.push_back(std::make_unique<Enemy>(10, 11, 5, 2, 4));
-        entities.push_back(std::make_unique<Enemy>(11, 10, 5, 2, 5));
-        entities.push_back(std::make_unique<Enemy>(11, 11, 5, 2, 6));
+        entities.push_back(std::make_unique<Enemy>(10, 10, 6, 2, 7));  // x y hp dmg visionRange
+        entities.push_back(std::make_unique<Enemy>(11, 11, 6, 2, 8));
+        entities.push_back(std::make_unique<Enemy>(9, 11, 6, 2, 9));
+        entities.push_back(std::make_unique<Enemy>(10, 12, 6, 2, 10));
     }
 
     //-------------------------functions-------------------------
