@@ -2,9 +2,11 @@
 
 #include <conio.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 
+#include "constans.h"
 #include "item.h"
 
 void Game::draw() const {
@@ -91,8 +93,7 @@ void Game::run() {
 
     if (player->isDead()) {
         std::cout << "YOU ARE DEAD!" << std::endl;
-    }
-    if (!hasEnemies()) {
+    } else if (!hasEnemies()) {
         std::cout << "EXELENT!" << std::endl << "YOU ARE WIN!" << std::endl;
     } else {
         std::cout << "END GAME!" << std::endl;
@@ -103,18 +104,63 @@ Point Game::findFreeCell(int minDistance) {
     int x = player->getX();
     int y = player->getY();
     int dx, dy;
-    for(int i=0; i<static_cast<int>(freeCells.size()); i+=1){
-        Point p=freeCells[i];
+    for (int i = 0; i < static_cast<int>(freeCells.size()); i += 1) {
+        Point p = freeCells[i];
         dx = abs(x - p.x);
         dy = abs(y - p.y);
-        if ((dx+dy)>=minDistance){
+        if ((dx + dy) >= minDistance) {
             freeCells[i] = freeCells.back();
             freeCells.pop_back();
             return p;
         }
-
     }
     Point p;
-    p.x=-1; p.y=-1;
+    p.x = -1;
+    p.y = -1;
     return p;
+}
+Game::Game() {
+    map = {"####################", "#..................#", "#..................#",
+           "#..................#", "#..................#", "#..................#",
+           "#..................#", "#..................#", "#..................#",
+           "#..................#", "#..................#", "#..................#",
+           "#..................#", "#..................#", "#..................#",
+           "#..................#", "#..................#", "#..................#",
+           "#..................#", "####################"};
+    auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y, consts::PLAYER_HP, consts::PLAYER_DAMAGE);
+    player = player_owner.get();
+    entities.push_back(std::move(player_owner));  // x  y      hp              dmg visionRange
+
+    for (int y = 0; y < static_cast<int>(map.size()); y += 1) {
+        for (int x = 0; x < static_cast<int>(map[0].size()); x += 1) {
+            if (isWalkable(x, y)) {
+                Point p;
+                p.x = x;
+                p.y = y;
+                freeCells.push_back(p);
+            }
+        }
+    }
+    std::shuffle(freeCells.begin(), freeCells.end(), generator);
+    // Enemy
+    int enemyCount = randomInt(consts::ENEMY_COUNT_MIN, consts::ENEMY_COUNT_MAX);
+    for (int i = 0; i < enemyCount; i += 1) {
+        Point p = findFreeCell(consts::ENEMY_MIN_SPAWN_DISTANCE);  // В скобках=минимальное расстояние от игрока до монстра
+        if (p.x !=  consts::NO_CELL) {
+            entities.push_back(
+                std::make_unique<Enemy>(p.x, p.y, randomInt(consts::ENEMY_HP_MIN, consts::ENEMY_HP_MAX), randomInt(consts::ENEMY_DAMAGE_MIN, consts::ENEMY_DAMAGE_MAX), constd::ENEMY_VISION_RANGE));
+        } else {
+            break;
+        }
+    }
+    // Chest
+    int chestCount = randomInt(consts::CHEST_COUNT_MIN, consts::CHEST_COUNT_MAX);
+    for (int i = 0; i < chestCount; i += 1) {
+        Point p = findFreeCell(consts::CHEST_MIN_SPAWN_DISTANCE);
+        if (p.x != consts::NO_CELL) {
+            entities.push_back(std::make_unique<Chest>(p.x, p.y, makeRandomItem()));
+        } else {
+            break;
+        }
+    }
 }

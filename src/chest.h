@@ -1,15 +1,18 @@
 #pragma once
+#include <memory>
+#include <vector>
+
+#include "constans.h"
 #include "entity.h"
 #include "item.h"
-#include <vector>
-#include <memory>
-class Chest: public Entity{
-private:
+class Chest : public Entity {
+   private:
     std::vector<std::unique_ptr<Item>> items;
-public:
-    Chest(int x, int y, std::unique_ptr<Item> item) : Entity(x, y, 'C', 1, 0){
+
+   public:
+    Chest(int x, int y, std::unique_ptr<Item> item) : Entity(x, y, consts::CHEST_SYMBOL, consts::CHEST_HP, consts::CHEST_DAMAGE) {
         items.push_back(std::move(item));
     }
-    bool isDead() const override { return items.empty(); } ;
+    bool isDead() const override { return items.empty(); };
     void interact(Game& game) override;
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include<algorithm>
+#include "constans.h"
 class Game;
 class Entity {
    private:
@@ -56,7 +57,7 @@ class Entity {
 //---------------------Entity------------------------
 class Player : public Entity {
    public:
-    Player(int x, int y, int hp, int damage) : Entity(x, y, '@', hp, damage) {}
+    Player(int x, int y, int hp, int damage) : Entity(x, y, consts::PLAYER_SYMBOL, hp, damage) {}
 };
 
 class Enemy : public Entity {
@@ -64,7 +65,7 @@ class Enemy : public Entity {
     int visionRange;
 
    public:
-    Enemy(int x, int y, int hp, int damage, int visionRange) : Entity(x, y, 'M', hp, damage) {
+    Enemy(int x, int y, int hp, int damage, int visionRange) : Entity(x, y, consts::ENEMY_SYMBOL, hp, damage) {
         this->visionRange = visionRange;
     }
     void interact(Game& game) override;
