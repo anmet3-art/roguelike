@@ -34,10 +34,10 @@ void Enemy::update(Game& game) {
         }
     }
     if (game.isWalkable(newX, newY)) {
-        Newcoord(newX, newY);
+        setPosition(newX, newY);
     }
 }
 void Enemy::interact(Game& game){
     takeDamage(game.getPlayer().getDamage());
-    
+
 }

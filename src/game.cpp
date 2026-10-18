@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "constans.h"
+#include "constants.h"
 #include "item.h"
 
 void Game::draw() const {
@@ -57,7 +57,7 @@ bool Game::playerTurn() {
         turn = true;
 
     } else if (isWalkable(nx, ny)) {
-        player->Newcoord(nx, ny);
+        player->setPosition(nx, ny);
         turn = true;
 
     } else {
@@ -115,8 +115,8 @@ Point Game::findFreeCell(int minDistance) {
         }
     }
     Point p;
-    p.x = -1;
-    p.y = -1;
+    p.x = consts::NO_CELL;
+    p.y = consts::NO_CELL;
     return p;
 }
 Game::Game() {
@@ -127,7 +127,8 @@ Game::Game() {
            "#..................#", "#..................#", "#..................#",
            "#..................#", "#..................#", "#..................#",
            "#..................#", "####################"};
-    auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y, consts::PLAYER_HP, consts::PLAYER_DAMAGE);
+    auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y,
+                                                 consts::PLAYER_HP, consts::PLAYER_DAMAGE);
     player = player_owner.get();
     entities.push_back(std::move(player_owner));  // x  y      hp              dmg visionRange
 
@@ -145,10 +146,14 @@ Game::Game() {
     // Enemy
     int enemyCount = randomInt(consts::ENEMY_COUNT_MIN, consts::ENEMY_COUNT_MAX);
     for (int i = 0; i < enemyCount; i += 1) {
-        Point p = findFreeCell(consts::ENEMY_MIN_SPAWN_DISTANCE);  // В скобках=минимальное расстояние от игрока до монстра
-        if (p.x !=  consts::NO_CELL) {
-            entities.push_back(
-                std::make_unique<Enemy>(p.x, p.y, randomInt(consts::ENEMY_HP_MIN, consts::ENEMY_HP_MAX), randomInt(consts::ENEMY_DAMAGE_MIN, consts::ENEMY_DAMAGE_MAX), constd::ENEMY_VISION_RANGE));
+        Point p =
+            findFreeCell(consts::ENEMY_MIN_SPAWN_DISTANCE);  // В скобках=минимальное расстояние от
+                                                             // игрока до монстра
+        if (p.x != consts::NO_CELL) {
+            entities.push_back(std::make_unique<Enemy>(
+                p.x, p.y, randomInt(consts::ENEMY_HP_MIN, consts::ENEMY_HP_MAX),
+                randomInt(consts::ENEMY_DAMAGE_MIN, consts::ENEMY_DAMAGE_MAX),
+                consts::ENEMY_VISION_RANGE));
         } else {
             break;
         }

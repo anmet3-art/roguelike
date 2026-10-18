@@ -2,7 +2,7 @@
 #include <memory>
 #include <vector>
 
-#include "constans.h"
+#include "constants.h"
 #include "entity.h"
 #include "item.h"
 class Chest : public Entity {
@@ -13,6 +13,6 @@ class Chest : public Entity {
     Chest(int x, int y, std::unique_ptr<Item> item) : Entity(x, y, consts::CHEST_SYMBOL, consts::CHEST_HP, consts::CHEST_DAMAGE) {
         items.push_back(std::move(item));
     }
-    bool isDead() const override { return items.empty(); };
+    bool isDead() const override { return items.empty(); }
     void interact(Game& game) override;
 };

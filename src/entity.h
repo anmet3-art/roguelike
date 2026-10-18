@@ -1,18 +1,17 @@
 #pragma once
 #include<algorithm>
-#include "constans.h"
+#include "constants.h"
 class Game;
 class Entity {
    private:
-    int x;
-    int y;
-    char symbol;
-    int hp;
-    int maxHp;
-    int damage;
+    int x{0};
+    int y{0};
+    char symbol{'0'};
+    int hp{0};
+    int maxHp{0};
+    int damage{0};
 
    public:
-    Entity() {}
     Entity(int x, int y, char symbol, int hp, int damage) {
         this->x = x;
         this->y = y;
@@ -21,15 +20,6 @@ class Entity {
         this->damage = damage;
         this->symbol = symbol;
     }
-
-    // Movement methods(useless for now)
-    void moveUp() { y--; }
-    void moveDown() { y++; }
-    void moveLeft() { x--; }
-    void moveRight() { x++; }
-
-
-
     // Getters
 
     int getX() const { return x; }
@@ -45,7 +35,7 @@ class Entity {
     virtual bool isDead() const { return hp <= 0; }
 
     char getSymbol() const { return symbol; }
-    void Newcoord(int newX, int newY) {
+    void setPosition(int newX, int newY) {
         x = newX;
         y = newY;
     }

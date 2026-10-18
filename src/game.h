@@ -6,6 +6,7 @@
 
 #include "chest.h"
 #include "entity.h"
+#include "constants.h"
 struct Point {
     int x = 0;
     int y = 0;
@@ -29,7 +30,7 @@ class Game {
     }
 
     std::unique_ptr<Item> makeRandomItem() {
-        return std::make_unique<HealPotion>(randomInt(3, 10));
+        return std::make_unique<HealPotion>(randomInt(consts::HEAL_POTION_MIN, consts::HEAL_POTION_MAX));
     }
 
     //-------------------------functions-------------------------
