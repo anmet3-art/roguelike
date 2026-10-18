@@ -5,13 +5,11 @@
 #include <memory>
 class Chest: public Entity{
 private:
-
     std::vector<std::unique_ptr<Item>> items;
 public:
-    Chest(int x, int y, char symbol, int hp, int damage) : Entity(x, y, 'C', hp, damage){
-        auto items_charact = std::make_unique<HealPotion>(5);
-        items.push_back(std::move(items_charact));
+    Chest(int x, int y) : Entity(x, y, 'C', 1, 0){
+        items.push_back(std::make_unique<HealPotion>(5));
     }
-    bool isDead() const { return items.empty(); } override;
+    bool isDead() const override { return items.empty(); } ;
     void interact(Game& game) override;
 };

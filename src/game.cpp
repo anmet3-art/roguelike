@@ -71,8 +71,7 @@ void Game::run() {
     while (running) {
         draw();
         bool turn = playerTurn();
-        std::erase_if(entities,
-                      [this](const auto& ent) { return (ent->isDead() && ent.get() != player); });
+        std::erase_if(entities, [this](const auto& ent) { return (ent->isDead() && ent.get() != player); });
         if (!hasEnemies()) {
             running = false;
         }

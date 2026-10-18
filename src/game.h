@@ -8,6 +8,7 @@
 #include <vector>
 // kaggle = money
 #include "entity.h"
+#include "chest.h"
 
 class Game {
    private:
@@ -32,6 +33,8 @@ class Game {
         entities.push_back(std::make_unique<Enemy>(11, 11, 6, 2, 8));
         entities.push_back(std::make_unique<Enemy>(9, 11, 6, 2, 9));
         entities.push_back(std::make_unique<Enemy>(10, 12, 6, 2, 10));
+        entities.push_back(std::make_unique<Chest>(4, 4));
+        entities.push_back(std::make_unique<Chest>(8, 4));
     }
 
     //-------------------------functions-------------------------
