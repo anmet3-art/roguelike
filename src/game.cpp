@@ -1,9 +1,11 @@
 #include "game.h"
-#include "item.h"
+
 #include <conio.h>
 
 #include <cstdlib>
 #include <iostream>
+
+#include "item.h"
 
 void Game::draw() const {
     std::string frame = "\033[H";
@@ -71,7 +73,8 @@ void Game::run() {
     while (running) {
         draw();
         bool turn = playerTurn();
-        std::erase_if(entities, [this](const auto& ent) { return (ent->isDead() && ent.get() != player); });
+        std::erase_if(entities,
+                      [this](const auto& ent) { return (ent->isDead() && ent.get() != player); });
         if (!hasEnemies()) {
             running = false;
         }
@@ -95,4 +98,23 @@ void Game::run() {
         std::cout << "END GAME!" << std::endl;
     }
     _getch();
+}
+Point Game::findFreeCell(int minDistance) {
+    int x = player->getX();
+    int y = player->getY();
+    int dx, dy;
+    for(int i=0; i<static_cast<int>(freeCells.size()); i+=1){
+        Point p=freeCells[i];
+        dx = abs(x - p.x);
+        dy = abs(y - p.y);
+        if ((dx+dy)>=minDistance){
+            freeCells[i] = freeCells.back();
+            freeCells.pop_back();
+            return p;
+        }
+
+    }
+    Point p;
+    p.x=-1; p.y=-1;
+    return p;
 }
