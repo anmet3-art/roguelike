@@ -3,7 +3,7 @@
 #include "game.h"
 void Chest::interact(Game& game){
     for(auto& x: items){
-        x->use(game);
+        game.getPlayer().pushItem(std::move(x));
     }
     items.clear();
 

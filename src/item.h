@@ -11,8 +11,15 @@ class HealPotion : public Item {
     int healpoint;
 
    public:
-   HealPotion(int healpoint){
-      this->healpoint=healpoint;
-   }
+    HealPotion(int healpoint) { this->healpoint = healpoint; }
     void use(Game& game) override;
 };
+class PowerPotion : public Item {
+   private:
+    int damageIncrease;
+
+   public:
+    PowerPotion(int damageIncrease) { this->damageIncrease = damageIncrease; }
+    void use(Game& game) override;
+}
+

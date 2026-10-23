@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "chest.h"
-#include "entity.h"
 #include "constants.h"
+#include "entity.h"
 struct Point {
     int x = 0;
     int y = 0;
@@ -30,7 +30,18 @@ class Game {
     }
 
     std::unique_ptr<Item> makeRandomItem() {
-        return std::make_unique<HealPotion>(randomInt(consts::HEAL_POTION_MIN, consts::HEAL_POTION_MAX));
+        int count=randomInt(1,2);
+        switch (count){
+        case 1:
+            return std::make_unique<HealPotion>(randomInt(consts::HEAL_POTION_MIN, consts::HEAL_POTION_MAX));
+            break;
+        case 2:
+            return std::make_unique<PowerPotion>(randomInt(consts::POWER_POTION_MIN, consts::POWER_POTION_MAX));
+            break;
+        default:
+            return std::make_unique<HealPotion>(randomInt(consts::HEAL_POTION_MIN, consts::HEAL_POTION_MAX));
+            break;
+        }
     }
 
     //-------------------------functions-------------------------
@@ -43,6 +54,7 @@ class Game {
     }
 
     void healPlayer(int amount) { player->giveHp(amount); }
+    void boostPlayerDamage(int amount){player->giveDamage(amount);}
     void damagePlayer(int amount) { player->takeDamage(amount); }
 
     Entity* entityAt(int x, int y) const {  // Что это за существо
@@ -62,7 +74,7 @@ class Game {
         return false;
     }
 
-    const Player& getPlayer() const { return *player; }
+    Player& getPlayer() const { return *player; }
     //-------------------------ОТРИСОВКА КАРТЫ-----------------------------
     void draw() const;
     //-------------------------ХОД ИГРОКА-----------------------------------

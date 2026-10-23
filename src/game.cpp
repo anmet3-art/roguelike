@@ -29,8 +29,10 @@ void Game::draw() const {
     frame += "\033[J";
     std::cout << frame;
     int hpplayer = (player->getHp());
-    std::cout << "Hp:" << hpplayer << std::endl;
+    std::cout << "Hp: " << hpplayer<< '/' << consts::PLAYER_HP_MAX<< std::endl;
+    std::cout<<"Items: " << player->getItemCount() << std::endl;
 }
+
 bool Game::playerTurn() {
     char input = _getch();
     bool turn = 1;
@@ -50,6 +52,16 @@ bool Game::playerTurn() {
     } else if (input == 'd') {
         nx = player->getX() + 1;
         ny = player->getY();
+    } else if (input == '1') {
+        if(player->hasItem()){
+            player->takeItem()->use(*this);
+            turn=true;
+            return turn;
+        }
+        else{
+            turn=false;
+            return turn;
+        }
     }
     Entity* playerMoveTarget = entityAt(nx, ny);
     if (playerMoveTarget != nullptr && playerMoveTarget != player) {

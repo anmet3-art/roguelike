@@ -1,6 +1,9 @@
 #pragma once
 #include<algorithm>
 #include "constants.h"
+#include "item.h"
+#include<memory>
+#include<vector>
 class Game;
 class Entity {
    private:
@@ -32,6 +35,9 @@ class Entity {
         hp=hp+amount;
         hp=std::min(hp, maxHp);
     }
+    void giveDamage(int amount){
+        damage=damage+amount;
+    }
     virtual bool isDead() const { return hp <= 0; }
 
     char getSymbol() const { return symbol; }
@@ -46,7 +52,14 @@ class Entity {
 
 //---------------------Entity------------------------
 class Player : public Entity {
+    private:
+    std::vector<std::unique_ptr<Item>> playerInventory;
+
    public:
+   void pushItem(std::unique_ptr<Item> item);
+   bool hasItem() const;
+   int getItemCount() const;
+   std::unique_ptr<Item> takeItem();
     Player(int x, int y, int hp, int damage) : Entity(x, y, consts::PLAYER_SYMBOL, hp, damage) {}
 };
 

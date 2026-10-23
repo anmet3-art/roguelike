@@ -41,3 +41,20 @@ void Enemy::interact(Game& game){
     takeDamage(game.getPlayer().getDamage());
 
 }
+void Player::pushItem(std::unique_ptr<Item> item){
+    playerInventory.push_back(std::move(item));
+}
+bool Player::hasItem() const{
+    return (!playerInventory.empty());
+}
+std::unique_ptr<Item> Player::takeItem(){
+    std::unique_ptr<Item> itemAktiv;
+    if (hasItem()){
+        itemAktiv=std::move(playerInventory.back());
+        playerInventory.pop_back();
+    }
+    return itemAktiv;
+}
+int Player::getItemCount() const{
+    return static_cast<int>(playerInventory.size());
+}
