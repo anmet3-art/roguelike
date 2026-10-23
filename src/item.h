@@ -21,5 +21,5 @@ class PowerPotion : public Item {
    public:
     PowerPotion(int damageIncrease) { this->damageIncrease = damageIncrease; }
     void use(Game& game) override;
-}
+};
 
