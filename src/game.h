@@ -30,17 +30,14 @@ class Game {
     }
 
     std::unique_ptr<Item> makeRandomItem() {
-        int count=randomInt(1,2);
-        switch (count){
+        int itemType=randomInt(1,2);
+        switch (itemType){
         case 1:
             return std::make_unique<HealPotion>(randomInt(consts::HEAL_POTION_MIN, consts::HEAL_POTION_MAX));
-            break;
         case 2:
             return std::make_unique<PowerPotion>(randomInt(consts::POWER_POTION_MIN, consts::POWER_POTION_MAX));
-            break;
         default:
             return std::make_unique<HealPotion>(randomInt(consts::HEAL_POTION_MIN, consts::HEAL_POTION_MAX));
-            break;
         }
     }
 
