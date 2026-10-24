@@ -12,6 +12,7 @@ constexpr int PLAYER_HP_MAX = 20;
 constexpr int PLAYER_DAMAGE = 2;
 constexpr char PLAYER_SYMBOL = '@';
 
+constexpr int INVENTORY_MAX_ITEMS = 2;
 // Враги
 constexpr int ENEMY_COUNT_MIN = 6;
 constexpr int ENEMY_COUNT_MAX = 7;
@@ -22,13 +23,13 @@ constexpr int ENEMY_HP_MAX = 6;
 constexpr int ENEMY_DAMAGE_MIN = 2;
 constexpr int ENEMY_DAMAGE_MAX = 4;
 
-constexpr int ENEMY_VISION_RANGE = 8;
-constexpr int ENEMY_MIN_SPAWN_DISTANCE = 9;
+constexpr int ENEMY_VISION_RANGE = 6;
+constexpr int ENEMY_MIN_SPAWN_DISTANCE = 8;
 constexpr char ENEMY_SYMBOL = 'M';
 
 // Сундуки
-constexpr int CHEST_COUNT_MIN = 2;
-constexpr int CHEST_COUNT_MAX = 4;
+constexpr int CHEST_COUNT_MIN = 3;
+constexpr int CHEST_COUNT_MAX = 6;
 
 constexpr int CHEST_MIN_SPAWN_DISTANCE = 0;
 constexpr int CHEST_HP = 1;

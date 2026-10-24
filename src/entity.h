@@ -2,6 +2,7 @@
 #include<algorithm>
 #include "constants.h"
 #include "item.h"
+#include<string>
 #include<memory>
 #include<vector>
 class Game;
@@ -59,6 +60,9 @@ class Player : public Entity {
    void pushItem(std::unique_ptr<Item> item);
    bool hasItem() const;
    int getItemCount() const;
+   bool hasSpace() const;
+   std::string getItemNames() const;
+
    std::unique_ptr<Item> takeItem();
     Player(int x, int y, int hp, int damage) : Entity(x, y, consts::PLAYER_SYMBOL, hp, damage) {}
 };

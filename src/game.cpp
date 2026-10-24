@@ -29,8 +29,9 @@ void Game::draw() const {
     frame += "\033[J";
     std::cout << frame;
     int hpplayer = (player->getHp());
-    std::cout << "Hp: " << hpplayer<< '/' << consts::PLAYER_HP_MAX<< std::endl;
-    std::cout<<"Items: " << player->getItemCount() << std::endl;
+    std::cout << "Hp: " << hpplayer << '/' << consts::PLAYER_HP_MAX << std::endl;
+    std::cout << "Items(" << player->getItemCount() << '/' << consts::INVENTORY_MAX_ITEMS
+              << "): " << player->getItemNames() << std::endl;
 }
 
 bool Game::playerTurn() {
@@ -53,13 +54,12 @@ bool Game::playerTurn() {
         nx = player->getX() + 1;
         ny = player->getY();
     } else if (input == '1') {
-        if(player->hasItem()){
+        if (player->hasItem()) {
             player->takeItem()->use(*this);
-            turn=true;
+            turn = true;
             return turn;
-        }
-        else{
-            turn=false;
+        } else {
+            turn = false;
             return turn;
         }
     }

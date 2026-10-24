@@ -58,3 +58,16 @@ std::unique_ptr<Item> Player::takeItem(){
 int Player::getItemCount() const{
     return static_cast<int>(playerInventory.size());
 }
+std::string Player::getItemNames() const{
+    std::string result;
+    for(const auto& item: playerInventory){
+        if (!result.empty()){
+            result+=", ";
+        }
+        result+=item->getName();
+    }
+    return result;
+}
+bool Player::hasSpace() const{
+    return (getItemCount()<consts::INVENTORY_MAX_ITEMS);
+}
