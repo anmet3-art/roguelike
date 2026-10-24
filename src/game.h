@@ -16,11 +16,13 @@ class Game {
     std::vector<std::unique_ptr<Entity>> entities;
     Player* player{nullptr};
     bool running = true;
+    bool won {false};
     std::mt19937 generator{std::random_device{}()};
     std::vector<Point> freeCells;
-
+    int currentLevel{1};
    public:
     Game();
+    void startLevel();
     Point findFreeCell(int minDistance);
     int randomInt(int from, int to) {
         std::uniform_int_distribution<int> dice(from, to);
@@ -46,13 +48,13 @@ class Game {
             x >= static_cast<int>(map[y].size())) {
             return false;
         }
-        return map[y][x] == '.' && entityAt(x, y) == nullptr;
+        return map[y][x] != '#' && entityAt(x, y) == nullptr;
     }
     bool loadMap(const std::string& level);
     void healPlayer(int amount) { player->giveHp(amount); }
     void boostPlayerDamage(int amount){player->giveDamage(amount);}
     void damagePlayer(int amount) { player->takeDamage(amount); }
-
+    bool goToNextLevel();
     Entity* entityAt(int x, int y) const {  // Что это за существо
         for (const auto& ent : entities) {
             if (x == ent->getX() && y == ent->getY()) {

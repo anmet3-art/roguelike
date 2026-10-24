@@ -69,10 +69,12 @@ bool Game::playerTurn() {
     if (playerMoveTarget != nullptr && playerMoveTarget != player) {
         playerMoveTarget->interact(*this);
         turn = true;
-
     } else if (isWalkable(nx, ny)) {
         player->setPosition(nx, ny);
         turn = true;
+        if (map[ny][nx]==consts::STAIRS_SYMBOL && !hasEnemies()){
+            won=!goToNextLevel();
+        }
 
     } else {
         turn = false;
@@ -91,7 +93,7 @@ void Game::run() {
         bool turn = playerTurn();
         std::erase_if(entities,
                       [this](const auto& ent) { return (ent->isDead() && ent.get() != player); });
-        if (!hasEnemies()) {
+        if (won==true) {
             running = false;
         }
         if (turn) {
@@ -107,7 +109,7 @@ void Game::run() {
 
     if (player->isDead()) {
         std::cout << "YOU ARE DEAD!" << std::endl;
-    } else if (!hasEnemies()) {
+    } else if (won==true) {
         std::cout << "EXELENT!" << std::endl << "YOU ARE WIN!" << std::endl;
     } else {
         std::cout << "END GAME!" << std::endl;
@@ -145,20 +147,22 @@ bool Game::loadMap(const std::string& level) {
     }
     return true;
 }
-Game::Game() {
-    if (!loadMap("maps/level1.txt")) {
-        std::cerr << "cannot open maps/level1.txt, run from project root" << std::endl;
-        std::exit(1);
+bool Game::goToNextLevel(){
+    if (!loadMap("maps/level"+std::to_string(currentLevel+1)+".txt")) {
+        return false;
     }
+    currentLevel+=1;
+    startLevel();
+    return true;
+}
 
-    auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y,
-                                                 consts::PLAYER_HP, consts::PLAYER_DAMAGE);
-    player = player_owner.get();
-    entities.push_back(std::move(player_owner));  // x  y  hp   dmg visionRange
-
+void Game::startLevel() {
+    player->setPosition(consts::PLAYER_START_X, consts::PLAYER_START_Y);
+    std::erase_if(entities, [this](const auto& ent) { return (ent.get() != player); });
+    freeCells.clear();
     for (int y = 0; y < static_cast<int>(map.size()); y += 1) {
         for (int x = 0; x < static_cast<int>(map[0].size()); x += 1) {
-            if (isWalkable(x, y)) {
+            if (isWalkable(x, y) && map[y][x]!=consts::STAIRS_SYMBOL) {
                 Point p;
                 p.x = x;
                 p.y = y;
@@ -192,4 +196,16 @@ Game::Game() {
             break;
         }
     }
+}
+
+Game::Game() {
+    if (!loadMap("maps/level"+std::to_string(currentLevel)+".txt")) {
+        std::cerr << "cannot open maps/level"+std::to_string(currentLevel)+".txt, run from project root" << std::endl;
+        std::exit(1);
+    }
+    auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y,
+                                                 consts::PLAYER_HP, consts::PLAYER_DAMAGE);
+    player = player_owner.get();
+    entities.push_back(std::move(player_owner));  // x  y  hp   dmg visionRange
+    startLevel();
 }

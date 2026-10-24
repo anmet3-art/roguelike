@@ -36,6 +36,9 @@ constexpr int CHEST_HP = 1;
 constexpr int CHEST_DAMAGE = 0;
 constexpr char CHEST_SYMBOL = 'C';
 
+// Лестница
+constexpr char STAIRS_SYMBOL='>';
+
 // Предметы
 constexpr int HEAL_POTION_MIN = 10;
 constexpr int HEAL_POTION_MAX = 10;
