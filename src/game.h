@@ -3,7 +3,6 @@
 #include <random>
 #include <string>
 #include <vector>
-
 #include "chest.h"
 #include "constants.h"
 #include "entity.h"
@@ -49,7 +48,7 @@ class Game {
         }
         return map[y][x] == '.' && entityAt(x, y) == nullptr;
     }
-
+    bool loadMap(const std::string& level);
     void healPlayer(int amount) { player->giveHp(amount); }
     void boostPlayerDamage(int amount){player->giveDamage(amount);}
     void damagePlayer(int amount) { player->takeDamage(amount); }

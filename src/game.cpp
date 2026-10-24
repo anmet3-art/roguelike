@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 
 #include "constants.h"
@@ -29,7 +30,8 @@ void Game::draw() const {
     frame += "\033[J";
     std::cout << frame;
     int hpplayer = (player->getHp());
-    std::cout << "Hp: " << hpplayer << '/' << consts::PLAYER_HP_MAX << std::endl;
+    std::cout << "Hp: " << hpplayer << '/' << consts::PLAYER_HP_MAX
+              << " Dmg: " << (player->getDamage()) << std::endl;
     std::cout << "Items(" << player->getItemCount() << '/' << consts::INVENTORY_MAX_ITEMS
               << "): " << player->getItemNames() << std::endl;
 }
@@ -131,18 +133,28 @@ Point Game::findFreeCell(int minDistance) {
     p.y = consts::NO_CELL;
     return p;
 }
+bool Game::loadMap(const std::string& level) {
+    std::ifstream file = std::ifstream(level);
+    std::string line;
+    if (!file.is_open()) {
+        return false;
+    }
+    map.clear();
+    while (std::getline(file, line)) {
+        map.push_back(line);
+    }
+    return true;
+}
 Game::Game() {
-    map = {"####################", "#..................#", "#..................#",
-           "#..................#", "#..................#", "#..................#",
-           "#..................#", "#..................#", "#..................#",
-           "#..................#", "#..................#", "#..................#",
-           "#..................#", "#..................#", "#..................#",
-           "#..................#", "#..................#", "#..................#",
-           "#..................#", "####################"};
+    if (!loadMap("maps/level1.txt")) {
+        std::cerr << "cannot open maps/level1.txt, run from project root" << std::endl;
+        std::exit(1);
+    }
+
     auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y,
                                                  consts::PLAYER_HP, consts::PLAYER_DAMAGE);
     player = player_owner.get();
-    entities.push_back(std::move(player_owner));  // x  y      hp              dmg visionRange
+    entities.push_back(std::move(player_owner));  // x  y  hp   dmg visionRange
 
     for (int y = 0; y < static_cast<int>(map.size()); y += 1) {
         for (int x = 0; x < static_cast<int>(map[0].size()); x += 1) {
