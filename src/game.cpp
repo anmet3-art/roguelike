@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <queue>
 
 #include "constants.h"
 #include "item.h"
@@ -72,8 +73,8 @@ bool Game::playerTurn() {
     } else if (isWalkable(nx, ny)) {
         player->setPosition(nx, ny);
         turn = true;
-        if (map[ny][nx]==consts::STAIRS_SYMBOL && !hasEnemies()){
-            won=!goToNextLevel();
+        if (map[ny][nx] == consts::STAIRS_SYMBOL && !hasEnemies()) {
+            won = !goToNextLevel();
         }
 
     } else {
@@ -93,10 +94,11 @@ void Game::run() {
         bool turn = playerTurn();
         std::erase_if(entities,
                       [this](const auto& ent) { return (ent->isDead() && ent.get() != player); });
-        if (won==true) {
+        if (won == true) {
             running = false;
         }
         if (turn) {
+            computeDistances();
             for (auto& ent : entities) {
                 ent->update(*this);
             }
@@ -109,7 +111,7 @@ void Game::run() {
 
     if (player->isDead()) {
         std::cout << "YOU ARE DEAD!" << std::endl;
-    } else if (won==true) {
+    } else if (won == true) {
         std::cout << "EXELENT!" << std::endl << "YOU ARE WIN!" << std::endl;
     } else {
         std::cout << "END GAME!" << std::endl;
@@ -147,11 +149,11 @@ bool Game::loadMap(const std::string& level) {
     }
     return true;
 }
-bool Game::goToNextLevel(){
-    if (!loadMap("maps/level"+std::to_string(currentLevel+1)+".txt")) {
+bool Game::goToNextLevel() {
+    if (!loadMap("maps/level" + std::to_string(currentLevel + 1) + ".txt")) {
         return false;
     }
-    currentLevel+=1;
+    currentLevel += 1;
     startLevel();
     return true;
 }
@@ -162,7 +164,7 @@ void Game::startLevel() {
     freeCells.clear();
     for (int y = 0; y < static_cast<int>(map.size()); y += 1) {
         for (int x = 0; x < static_cast<int>(map[0].size()); x += 1) {
-            if (isWalkable(x, y) && map[y][x]!=consts::STAIRS_SYMBOL) {
+            if (isWalkable(x, y) && map[y][x] != consts::STAIRS_SYMBOL) {
                 Point p;
                 p.x = x;
                 p.y = y;
@@ -199,8 +201,10 @@ void Game::startLevel() {
 }
 
 Game::Game() {
-    if (!loadMap("maps/level"+std::to_string(currentLevel)+".txt")) {
-        std::cerr << "cannot open maps/level"+std::to_string(currentLevel)+".txt, run from project root" << std::endl;
+    if (!loadMap("maps/level" + std::to_string(currentLevel) + ".txt")) {
+        std::cerr << "cannot open maps/level" + std::to_string(currentLevel) +
+                         ".txt, run from project root"
+                  << std::endl;
         std::exit(1);
     }
     auto player_owner = std::make_unique<Player>(consts::PLAYER_START_X, consts::PLAYER_START_Y,
@@ -208,4 +212,55 @@ Game::Game() {
     player = player_owner.get();
     entities.push_back(std::move(player_owner));  // x  y  hp   dmg visionRange
     startLevel();
+}
+
+void Game::computeDistances() {
+    distToPlayer = std::vector<std::vector<int>>(map.size(), std::vector<int>(map[0].size(), -1));
+    std::queue<Point> q;
+    Point p;
+    p.x = player->getX();
+    p.y = player->getY();
+    q.push(p);
+    distToPlayer[p.y][p.x] = 0;
+    int dx[4] = {1, -1, 0, 0};
+    int dy[4] = {0, 0, 1, -1};
+    while (!q.empty()) {
+        Point cur;
+        cur.x = q.front().x;
+        cur.y = q.front().y;
+        q.pop();
+        for (int i = 0; i < 4; i += 1) {
+            int nx = cur.x + dx[i];
+            int ny = cur.y + dy[i];
+            p.x = nx;
+            p.y = ny;
+            if (0 < ny && ny < static_cast<int>(map.size() - 1) && 0 < nx &&
+                nx < static_cast<int>(map[ny].size() - 1) && map[ny][nx] != '#' &&
+                distToPlayer[ny][nx] == -1) {
+                distToPlayer[ny][nx] = distToPlayer[cur.y][cur.x] + 1;
+                q.push(p);
+            }
+        }
+    }
+}
+Point Game::nextStepToPlayer(int x, int y) const {
+    int minStep;
+    Point p;
+    p.x=consts::NO_CELL;
+    p.y=consts::NO_CELL;
+    int dx[4] = {1, -1, 0, 0};
+    int dy[4] = {0, 0, 1, -1};
+    minStep = distToPlayer[y][x];
+    for (int i = 0; i < 4; i += 1) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (distToPlayer[ny][nx] != -1 && isWalkable(nx, ny)) {
+            if(minStep>distToPlayer[ny][nx]){
+                p.x=nx;
+                p.y=ny;
+                minStep=distToPlayer[ny][nx];
+            }
+        }
+    }
+    return p;
 }

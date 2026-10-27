@@ -20,6 +20,8 @@ class Game {
     std::mt19937 generator{std::random_device{}()};
     std::vector<Point> freeCells;
     int currentLevel{1};
+
+    std::vector<std::vector<int>> distToPlayer;
    public:
     Game();
     void startLevel();
@@ -43,6 +45,8 @@ class Game {
     }
 
     //-------------------------functions-------------------------
+    void computeDistances();
+    Point nextStepToPlayer() const;
     bool isWalkable(int x, int y) const {  // есть ли в точке пребывания другой объект
         if (y < 0 || y >= static_cast<int>(map.size()) || x < 0 ||
             x >= static_cast<int>(map[y].size())) {
