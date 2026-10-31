@@ -16,3 +16,5 @@ void PowerPotion::use(Game& game) {
 std::string PowerPotion::getName() const{
     return ("Power+"+std::to_string(damageIncrease));
 }
+
+

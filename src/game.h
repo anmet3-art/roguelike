@@ -46,7 +46,7 @@ class Game {
 
     //-------------------------functions-------------------------
     void computeDistances();
-    Point nextStepToPlayer() const;
+    Point nextStepToPlayer(int x, int y) const;
     bool isWalkable(int x, int y) const {  // есть ли в точке пребывания другой объект
         if (y < 0 || y >= static_cast<int>(map.size()) || x < 0 ||
             x >= static_cast<int>(map[y].size())) {
@@ -59,6 +59,7 @@ class Game {
     void boostPlayerDamage(int amount){player->giveDamage(amount);}
     void damagePlayer(int amount) { player->takeDamage(amount); }
     bool goToNextLevel();
+    bool isFloor(int x, int y) const;
     Entity* entityAt(int x, int y) const {  // Что это за существо
         for (const auto& ent : entities) {
             if (x == ent->getX() && y == ent->getY()) {

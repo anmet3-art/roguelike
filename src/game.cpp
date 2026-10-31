@@ -214,6 +214,15 @@ Game::Game() {
     startLevel();
 }
 
+bool Game::isFloor(int x, int y) const {
+    if (0 <= y && y < static_cast<int>(map.size() - 1) && 0 <= x &&
+        x < static_cast<int>(map[y].size() - 1) && map[y][x] != '#' &&
+        (dynamic_cast<Chest*>(entityAt(x, y)) == nullptr) && distToPlayer[y][x] == -1) {
+        return true;
+    }
+    return false;
+}
+
 void Game::computeDistances() {
     distToPlayer = std::vector<std::vector<int>>(map.size(), std::vector<int>(map[0].size(), -1));
     std::queue<Point> q;
@@ -234,9 +243,7 @@ void Game::computeDistances() {
             int ny = cur.y + dy[i];
             p.x = nx;
             p.y = ny;
-            if (0 < ny && ny < static_cast<int>(map.size() - 1) && 0 < nx &&
-                nx < static_cast<int>(map[ny].size() - 1) && map[ny][nx] != '#' &&
-                distToPlayer[ny][nx] == -1) {
+            if (isFloor(nx, ny)) {
                 distToPlayer[ny][nx] = distToPlayer[cur.y][cur.x] + 1;
                 q.push(p);
             }
@@ -246,19 +253,22 @@ void Game::computeDistances() {
 Point Game::nextStepToPlayer(int x, int y) const {
     int minStep;
     Point p;
-    p.x=consts::NO_CELL;
-    p.y=consts::NO_CELL;
+    p.x = consts::NO_CELL;
+    p.y = consts::NO_CELL;
     int dx[4] = {1, -1, 0, 0};
     int dy[4] = {0, 0, 1, -1};
     minStep = distToPlayer[y][x];
     for (int i = 0; i < 4; i += 1) {
         int nx = x + dx[i];
         int ny = y + dy[i];
-        if (distToPlayer[ny][nx] != -1 && isWalkable(nx, ny)) {
-            if(minStep>distToPlayer[ny][nx]){
-                p.x=nx;
-                p.y=ny;
-                minStep=distToPlayer[ny][nx];
+        if (ny >= 0 && ny < static_cast<int>(map.size()) && nx >= 0 &&
+            nx < static_cast<int>(map[ny].size())) {
+            if (distToPlayer[ny][nx] != -1 && isWalkable(nx, ny)) {
+                if (minStep > distToPlayer[ny][nx]) {
+                    p.x = nx;
+                    p.y = ny;
+                    minStep = distToPlayer[ny][nx];
+                }
             }
         }
     }

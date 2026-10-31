@@ -1,10 +1,11 @@
 #pragma once
-#include<algorithm>
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "constants.h"
 #include "item.h"
-#include<string>
-#include<memory>
-#include<vector>
 class Game;
 class Entity {
    private:
@@ -20,7 +21,7 @@ class Entity {
         this->x = x;
         this->y = y;
         this->hp = hp;
-        this->maxHp=hp;
+        this->maxHp = hp;
         this->damage = damage;
         this->symbol = symbol;
     }
@@ -32,13 +33,11 @@ class Entity {
     int getDamage() const { return damage; }
 
     void takeDamage(int amount) { hp = hp - amount; }
-    void giveHp(int amount){
-        hp=hp+amount;
-        hp=std::min(hp, maxHp);
+    void giveHp(int amount) {
+        hp = hp + amount;
+        hp = std::min(hp, maxHp);
     }
-    void giveDamage(int amount){
-        damage=damage+amount;
-    }
+    void giveDamage(int amount) { damage = damage + amount; }
     virtual bool isDead() const { return hp <= 0; }
 
     char getSymbol() const { return symbol; }
@@ -47,32 +46,34 @@ class Entity {
         y = newY;
     }
     virtual void update(Game&) {}
-    virtual void interact(Game&){}
+    virtual void interact(Game&) {}
     virtual ~Entity() = default;
 };
 
 //---------------------Entity------------------------
 class Player : public Entity {
-    private:
+   private:
     std::vector<std::unique_ptr<Item>> playerInventory;
 
    public:
-   void pushItem(std::unique_ptr<Item> item);
-   bool hasItem() const;
-   int getItemCount() const;
-   bool hasSpace() const;
-   std::string getItemNames() const;
+    void pushItem(std::unique_ptr<Item> item);
+    bool hasItem() const;
+    int getItemCount() const;
+    bool hasSpace() const;
+    std::string getItemNames() const;
 
-   std::unique_ptr<Item> takeItem();
+    std::unique_ptr<Item> takeItem();
     Player(int x, int y, int hp, int damage) : Entity(x, y, consts::PLAYER_SYMBOL, hp, damage) {}
 };
 
 class Enemy : public Entity {
    private:
+    bool enemyWary{false};
     int visionRange;
 
    public:
-    Enemy(int x, int y, int hp, int damage, int visionRange) : Entity(x, y, consts::ENEMY_SYMBOL, hp, damage) {
+    Enemy(int x, int y, int hp, int damage, int visionRange)
+        : Entity(x, y, consts::ENEMY_SYMBOL, hp, damage) {
         this->visionRange = visionRange;
     }
     void interact(Game& game) override;
