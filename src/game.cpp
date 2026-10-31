@@ -216,7 +216,7 @@ Game::Game() {
 
 bool Game::isFloor(int x, int y) const {
     if (0 <= y && y < static_cast<int>(map.size() - 1) && 0 <= x &&
-        x < static_cast<int>(map[y].size() - 1) && map[y][x] != '#' &&
+        x < static_cast<int>(map[y].size() - 1) && map[y][x] != consts::WALLS_SYMBOL &&
         (dynamic_cast<Chest*>(entityAt(x, y)) == nullptr) && distToPlayer[y][x] == -1) {
         return true;
     }
